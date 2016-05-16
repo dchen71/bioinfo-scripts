@@ -12,11 +12,12 @@ parse_clustal = function(clustal_results, num_fasta = 2){
         results = clustal_results[seq(entry + 1,nrow(clustal_results), by= num_fasta + 1),]
         results = substr(results, 27, nchar(as.character(results[1])))
         results = paste0(results, sep="", collapse="") #Single line
+        return(results)
     }
     
     #Get back single line version of all entries by metaprogramming based on number of fasta inputs
     get_reads <- function() {
-        for(i in 1:num_fasta + 1) {
+        for(i in 0:num_fasta + 1) {
             fName <- paste("results.", i, sep="")
             assign(fName, eval(
                 substitute(
@@ -38,7 +39,7 @@ parse_clustal = function(clustal_results, num_fasta = 2){
     graph_df = cbind(graph_df, data.frame(matrix(ncol=num_fasta)))
     
     #Get the clustal results
-    con = get(paste0("result.",num_fasta + 1))
+    con = get(paste0("results.",num_fasta + 1))
     
     #Loop to append graph df
     for(i in 1:nchar(con)){
