@@ -37,6 +37,9 @@ parse_clustal = function(clustal_results, num_fasta = 2){
     #New rows based on first fasta file to last
     graph_df = cbind(graph_df, data.frame(matrix(ncol=num_fasta)))
     
+    #Get the clustal results
+    con = get(paste0("result.",num_fasta + 1))
+    
     #Loop to append graph df
     for(i in 1:nchar(con)){
         curr_char = substr(con,i,i)
