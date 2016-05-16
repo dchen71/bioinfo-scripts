@@ -14,7 +14,7 @@ parse_clustal = function(clustal_results, num_fasta = 2){
         results = paste0(results, sep="", collapse="") #Single line
     }
     
-    #Get back single line version of all entries
+    #Get back single line version of all entries by metaprogramming based on number of fasta inputs
     get_reads <- function() {
         for(i in 1:num_fasta + 1) {
             fName <- paste("results.", i, sep="")
@@ -31,7 +31,11 @@ parse_clustal = function(clustal_results, num_fasta = 2){
     get_reads()
     
     #Create data frame for graphing
-    graph_df = data.frame(POS = seq(1, nchar(human)), CON = NA, F1 = NA,  HUMAN = NA)
+    graph_df = data.frame(POS = seq(1, nchar(results.1)), CON = NA)
+    
+    #Init empty rows based on number of fasta inputs
+    #New rows based on first fasta file to last
+    graph_df = cbind(graph_df, data.frame(matrix(ncol=num_fasta)))
     
     #Loop to append graph df
     for(i in 1:nchar(con)){
