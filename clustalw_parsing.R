@@ -2,9 +2,6 @@
 ## Parse ClustalW results and return back dataframe with base amd -1, 0, 1, 2 based on conservation
 ##
 
-#Read input
-raw_data = read.table("muscle-I20160516-190153-0407-29699783-pg.clw", sep="\t")
-
 #Parses clustalW results and return back dataframe
 parse_clustal = function(clustal_results, num_fasta = 2){
     #Return results for all entries
@@ -17,7 +14,7 @@ parse_clustal = function(clustal_results, num_fasta = 2){
     
     #Get back single line version of all entries by metaprogramming based on number of fasta inputs
     get_reads <- function() {
-        for(i in 0:num_fasta + 1) {
+        for(i in 1:(num_fasta + 1)) {
             fName <- paste("results.", i, sep="")
             assign(fName, eval(
                 substitute(
@@ -43,6 +40,11 @@ parse_clustal = function(clustal_results, num_fasta = 2){
     
     #Loop to append graph df
     for(i in 1:nchar(con)){
+        #Code based on clustal grading
+        # * = 0
+        # : = 2
+        # . = 1
+        # space = -1
         curr_char = substr(con,i,i)
         if(curr_char == "*"){
             graph_df$CON[i] = 0
@@ -53,20 +55,14 @@ parse_clustal = function(clustal_results, num_fasta = 2){
         } else{
             graph_df$CON[i] = -1
         }
-        graph_df$MUS[i] = substr(mus,i,i)
-        graph_df$HUMAN[i] = substr(human,i,i)
+        #Adds fasta character
+        for(fasta_num in 1:num_fasta){
+            #Loop through to move through dataframe columns
+            graph_df[i,(2 + fasta_num)] = substr(get(paste0("results.",fasta_num)),i,i)
+
+        }
+
     }
     
-    #return(graph_df)
+    return(graph_df)
 }
-
-
-
-
-get_reads(5)
-
-genMyFuns(c(7, 9, 10))
-
-
-#Plot results
-write.csv(graph_df, "../Input/parsed_con.csv", row.names = FALSE)
