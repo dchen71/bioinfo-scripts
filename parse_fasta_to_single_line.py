@@ -1,5 +1,6 @@
 #
 # Builds new text files for fasta files
+# Creates text file with fasta sequence in single line without header
 #
 
 #Function to read in fasta and flatten it into a single line txt file
@@ -30,5 +31,3 @@ def flatten_fasta(id, organism):
 	f = open(output_file, 'w')
 	f.write(ref)
 	f.close()
-
-flatten_fasta("A0A0B4J1F4", "mouse") #Mouse
